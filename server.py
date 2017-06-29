@@ -23,10 +23,10 @@ class EventCollectorServicer(collector_grpc.EventsCollectorServicer):
         )
         return response
 
-    def TrackVisit(self, visit, context):
+    def TrackFunnelEvent(self, visit, context):
         print('Tracking visit: {}'.format(visit.id))
         data = visit.SerializeToString()
-        response = self.send_data_to_stream(data, 'mongo_oplog2')
+        response = self.send_data_to_stream(data, 'stream_name')
         return Response(message=json.dumps(response))
 
 

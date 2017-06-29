@@ -1,2 +1,3 @@
-# buffer-event-collector
-Buffer gRPC event collector
+# Buffer Event Collector
+
+Main gRPC server to collect events and metrics.

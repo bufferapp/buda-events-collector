@@ -1,9 +1,11 @@
+
+.PHONY: python
 python:
 	protoc \
 	--python_out . \
 	--proto_path protobufs \
 	protobufs/entities/utm.proto \
-	protobufs/entities/visit.proto \
+	protobufs/entities/funnel.proto \
 
 	python -m grpc_tools.protoc \
 		--python_out . \
@@ -11,5 +13,6 @@ python:
 		--proto_path protobufs \
 		protobufs/services/events_collector.proto
 
+.PHONY: clean
 clean:
 	rm -rf entities services

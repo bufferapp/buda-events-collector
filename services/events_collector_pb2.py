@@ -13,16 +13,16 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
-from entities import visit_pb2 as entities_dot_visit__pb2
+from entities import funnel_pb2 as entities_dot_funnel__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='services/events_collector.proto',
   package='collector',
   syntax='proto3',
-  serialized_pb=_b('\n\x1fservices/events_collector.proto\x12\tcollector\x1a\x14\x65ntities/visit.proto\"\x1b\n\x08Response\x12\x0f\n\x07message\x18\x01 \x01(\t2>\n\x0f\x45ventsCollector\x12+\n\nTrackVisit\x12\x06.Visit\x1a\x13.collector.Response\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x1fservices/events_collector.proto\x12\tcollector\x1a\x15\x65ntities/funnel.proto\"\x1b\n\x08Response\x12\x0f\n\x07message\x18\x01 \x01(\t2J\n\x0f\x45ventsCollector\x12\x37\n\x10TrackFunnelEvent\x12\x0c.FunnelEvent\x1a\x13.collector.Response\"\x00\x62\x06proto3')
   ,
-  dependencies=[entities_dot_visit__pb2.DESCRIPTOR,])
+  dependencies=[entities_dot_funnel__pb2.DESCRIPTOR,])
 
 
 
@@ -53,8 +53,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=68,
-  serialized_end=95,
+  serialized_start=69,
+  serialized_end=96,
 )
 
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
@@ -88,9 +88,9 @@ try:
       Args:
         channel: A grpc.Channel.
       """
-      self.TrackVisit = channel.unary_unary(
-          '/collector.EventsCollector/TrackVisit',
-          request_serializer=entities_dot_visit__pb2.Visit.SerializeToString,
+      self.TrackFunnelEvent = channel.unary_unary(
+          '/collector.EventsCollector/TrackFunnelEvent',
+          request_serializer=entities_dot_funnel__pb2.FunnelEvent.SerializeToString,
           response_deserializer=Response.FromString,
           )
 
@@ -99,7 +99,7 @@ try:
     # missing associated documentation comment in .proto file
     pass
 
-    def TrackVisit(self, request, context):
+    def TrackFunnelEvent(self, request, context):
       # missing associated documentation comment in .proto file
       pass
       context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -109,9 +109,9 @@ try:
 
   def add_EventsCollectorServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        'TrackVisit': grpc.unary_unary_rpc_method_handler(
-            servicer.TrackVisit,
-            request_deserializer=entities_dot_visit__pb2.Visit.FromString,
+        'TrackFunnelEvent': grpc.unary_unary_rpc_method_handler(
+            servicer.TrackFunnelEvent,
+            request_deserializer=entities_dot_funnel__pb2.FunnelEvent.FromString,
             response_serializer=Response.SerializeToString,
         ),
     }
@@ -128,7 +128,7 @@ try:
     only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
     # missing associated documentation comment in .proto file
     pass
-    def TrackVisit(self, request, context):
+    def TrackFunnelEvent(self, request, context):
       # missing associated documentation comment in .proto file
       pass
       context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
@@ -142,11 +142,11 @@ try:
     only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
     # missing associated documentation comment in .proto file
     pass
-    def TrackVisit(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+    def TrackFunnelEvent(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
       # missing associated documentation comment in .proto file
       pass
       raise NotImplementedError()
-    TrackVisit.future = None
+    TrackFunnelEvent.future = None
 
 
   def beta_create_EventsCollector_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
@@ -156,13 +156,13 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_deserializers = {
-      ('collector.EventsCollector', 'TrackVisit'): entities_dot_visit__pb2.Visit.FromString,
+      ('collector.EventsCollector', 'TrackFunnelEvent'): entities_dot_funnel__pb2.FunnelEvent.FromString,
     }
     response_serializers = {
-      ('collector.EventsCollector', 'TrackVisit'): Response.SerializeToString,
+      ('collector.EventsCollector', 'TrackFunnelEvent'): Response.SerializeToString,
     }
     method_implementations = {
-      ('collector.EventsCollector', 'TrackVisit'): face_utilities.unary_unary_inline(servicer.TrackVisit),
+      ('collector.EventsCollector', 'TrackFunnelEvent'): face_utilities.unary_unary_inline(servicer.TrackFunnelEvent),
     }
     server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
     return beta_implementations.server(method_implementations, options=server_options)
@@ -175,13 +175,13 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_serializers = {
-      ('collector.EventsCollector', 'TrackVisit'): entities_dot_visit__pb2.Visit.SerializeToString,
+      ('collector.EventsCollector', 'TrackFunnelEvent'): entities_dot_funnel__pb2.FunnelEvent.SerializeToString,
     }
     response_deserializers = {
-      ('collector.EventsCollector', 'TrackVisit'): Response.FromString,
+      ('collector.EventsCollector', 'TrackFunnelEvent'): Response.FromString,
     }
     cardinalities = {
-      'TrackVisit': cardinality.Cardinality.UNARY_UNARY,
+      'TrackFunnelEvent': cardinality.Cardinality.UNARY_UNARY,
     }
     stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
     return beta_implementations.dynamic_stub(channel, 'collector.EventsCollector', cardinalities, options=stub_options)

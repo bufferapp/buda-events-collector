@@ -2,10 +2,10 @@
 import grpc
 
 from entities import funnel_pb2 as entities_dot_funnel__pb2
-from services import events_collector_pb2 as services_dot_events__collector__pb2
+from services import event_collector_pb2 as services_dot_event__collector__pb2
 
 
-class EventsCollectorStub(object):
+class EventCollectorStub(object):
   # missing associated documentation comment in .proto file
   pass
 
@@ -16,13 +16,13 @@ class EventsCollectorStub(object):
       channel: A grpc.Channel.
     """
     self.TrackFunnelEvent = channel.unary_unary(
-        '/collector.EventsCollector/TrackFunnelEvent',
+        '/collector.EventCollector/TrackFunnelEvent',
         request_serializer=entities_dot_funnel__pb2.FunnelEvent.SerializeToString,
-        response_deserializer=services_dot_events__collector__pb2.Response.FromString,
+        response_deserializer=services_dot_event__collector__pb2.Response.FromString,
         )
 
 
-class EventsCollectorServicer(object):
+class EventCollectorServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
@@ -34,14 +34,14 @@ class EventsCollectorServicer(object):
     raise NotImplementedError('Method not implemented!')
 
 
-def add_EventsCollectorServicer_to_server(servicer, server):
+def add_EventCollectorServicer_to_server(servicer, server):
   rpc_method_handlers = {
       'TrackFunnelEvent': grpc.unary_unary_rpc_method_handler(
           servicer.TrackFunnelEvent,
           request_deserializer=entities_dot_funnel__pb2.FunnelEvent.FromString,
-          response_serializer=services_dot_events__collector__pb2.Response.SerializeToString,
+          response_serializer=services_dot_event__collector__pb2.Response.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
-      'collector.EventsCollector', rpc_method_handlers)
+      'collector.EventCollector', rpc_method_handlers)
   server.add_generic_rpc_handlers((generic_handler,))

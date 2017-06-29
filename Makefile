@@ -11,7 +11,7 @@ python:
 		--python_out . \
 		--grpc_python_out . \
 		--proto_path protobufs \
-		protobufs/services/events_collector.proto
+		protobufs/services/event_collector.proto
 
 .PHONY: clean
 clean:

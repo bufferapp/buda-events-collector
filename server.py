@@ -4,13 +4,13 @@ import grpc
 import boto3
 import json
 
-from services.events_collector_pb2 import Response
-import services.events_collector_pb2_grpc as collector_grpc
+from services.event_collector_pb2 import Response
+import services.event_collector_pb2_grpc as collector_grpc
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 
-class EventCollectorServicer(collector_grpc.EventsCollectorServicer):
+class EventCollectorServicer(collector_grpc.EventCollectorServicer):
 
     def __init__(self):
         self.client = boto3.client('kinesis')
@@ -33,7 +33,7 @@ class EventCollectorServicer(collector_grpc.EventsCollectorServicer):
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
-    collector_grpc.add_EventsCollectorServicer_to_server(
+    collector_grpc.add_EventCollectorServicer_to_server(
         EventCollectorServicer(),
         server
     )

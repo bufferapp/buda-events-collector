@@ -1,4 +1,4 @@
-IMAGE_NAME:=davidgasquez/event-collector-server:0.1.0
+IMAGE_NAME:=bufferapp/event-collector-server:0.1.0
 
 .PHONY: all
 all: run

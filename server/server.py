@@ -3,9 +3,15 @@ import time
 import grpc
 import boto3
 import json
+import logging
 
 from services.event_collector_pb2 import Response
 import services.event_collector_pb2_grpc as collector_grpc
+
+logging.basicConfig()
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
@@ -32,14 +38,17 @@ class EventCollectorServicer(collector_grpc.EventCollectorServicer):
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    logger.info('Server initialized')
 
     collector_grpc.add_EventCollectorServicer_to_server(
         EventCollectorServicer(),
         server
     )
+    logger.info('Servicer added')
 
     server.add_insecure_port('[::]:50051')
     server.start()
+    logger.info('Server started')
 
     try:
         while True:

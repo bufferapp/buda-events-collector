@@ -1,9 +1,0 @@
-{
-    "Records": [
-        {
-            "kinesis": {
-                "data": "test"
-                }
-        }
-    ]
-}

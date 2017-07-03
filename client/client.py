@@ -7,7 +7,7 @@ import services.event_collector_pb2_grpc as collector_grpc
 
 
 if __name__ == '__main__':
-    channel = grpc.insecure_channel('localhost:50051')
+    channel = grpc.insecure_channel('100.96.1.147:50051')
     stub = collector_grpc.EventCollectorStub(channel)
 
     for i in range(1000):

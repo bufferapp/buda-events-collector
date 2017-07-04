@@ -5,8 +5,8 @@ import boto3
 import json
 import logging
 
-from services.event_collector_pb2 import Response
-import services.event_collector_pb2_grpc as collector_grpc
+from buda.services.events_collector_pb2 import Response
+import buda.services.events_collector_pb2_grpc as collector_grpc
 
 logging.basicConfig()
 
@@ -16,7 +16,7 @@ logger.setLevel(logging.INFO)
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 
-class EventCollectorServicer(collector_grpc.EventCollectorServicer):
+class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
     def __init__(self):
         self.client = boto3.client('kinesis')
@@ -40,8 +40,8 @@ if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     logger.info('Server initialized')
 
-    collector_grpc.add_EventCollectorServicer_to_server(
-        EventCollectorServicer(),
+    collector_grpc.add_EventsCollectorServicer_to_server(
+        EventsCollectorServicer(),
         server
     )
     logger.info('Servicer added')

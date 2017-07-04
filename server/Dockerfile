@@ -7,7 +7,6 @@ COPY requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY server.py /usr/src/app/server.py
-COPY services /usr/src/app/services
-COPY entities /usr/src/app/entities
+COPY buda /usr/src/app/buda
 
 CMD ["python", "-u", "server.py"]

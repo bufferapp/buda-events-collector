@@ -4,7 +4,6 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY client.py /usr/src/app/client.py
-COPY services /usr/src/app/services
-COPY entities /usr/src/app/entities
+COPY buda /usr/src/app/buda
 
 CMD ["python", "client.py"]

@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+    name: events-collector-deployment
+spec:
+  template:
+    metadata:
+      labels:
+        app: events-collector
+    spec:
+      containers:
+        - name: events-collector
+          image: bufferapp/events-collector-server:0.1.0
+          imagePullPolicy: Always
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                  secretKeyRef:
+                      name: aws
+                      key: access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                  secretKeyRef:
+                      name: aws
+                      key: secret-access-key
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                  secretKeyRef:
+                      name: aws
+                      key: default-region
+          ports:
+            - name: grpc
+              containerPort: 50051
+      imagePullSecrets:
+        - name: dockerhub

@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+    name: client-events-collector-deployment
+spec:
+  template:
+    metadata:
+      labels:
+        app: client-events-collector
+    spec:
+      containers:
+        - name: client-events-collector
+          image: davidgasquez/events-collector-client:0.1.0
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: dockerhub

@@ -29,9 +29,9 @@ class EventCollectorServicer(collector_grpc.EventCollectorServicer):
         )
         return response
 
-    def TrackFunnelEvent(self, visit, context):
-        print('Tracking visit: {}'.format(visit.id))
-        data = visit.SerializeToString()
+    def TrackFunnelEvent(self, funnel_event, context):
+        print('Tracking funnel_event: {}'.format(funnel_event.id))
+        data = funnel_event.SerializeToString()
         response = self.send_data_to_stream(data, 'buffer_app_events')
         return Response(message=json.dumps(response))
 

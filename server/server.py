@@ -29,17 +29,17 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         )
         return json.dumps(response)
 
-    def TrackFunnelEvent(self, funnel_event, context):
-        print('Tracking funnel_event: {}'.format(funnel_event.id))
+    def CollectFunnelEvent(self, funnel_event, context):
+        print('Collecting funnel_event: {}'.format(funnel_event.id))
         data = funnel_event.SerializeToString()
-        response = self.send_data_to_stream(data, 'buffer_app_events')
+        response = self.send_data_to_stream(data, 'buda_funnel_events')
         return Response(message=response)
 
-    def TrackFunnel(self, funnel, context):
-        print('Tracking funnel: {}'.format(funnel.id))
+    def CollectFunnel(self, funnel, context):
+        print('Collecting funnel: {}'.format(funnel.id))
         data = funnel.SerializeToString()
 
-        response = self.send_data_to_stream(data, 'buffer_app_events')
+        response = self.send_data_to_stream(data, 'buda_funnels')
         return Response(message=response)
 
 

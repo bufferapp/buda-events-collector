@@ -1,7 +1,8 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-    name: events-collector-deployment
+    name: events-collector
+    namespace: data
 spec:
   template:
     metadata:
@@ -10,7 +11,7 @@ spec:
     spec:
       containers:
         - name: events-collector
-          image: bufferapp/events-collector-server:0.1.0
+          image: bufferapp/events-collector:0.1.0
           imagePullPolicy: Always
           env:
             - name: AWS_ACCESS_KEY_ID
@@ -32,4 +33,4 @@ spec:
             - name: grpc
               containerPort: 50051
       imagePullSecrets:
-        - name: dockerhub
+        - name: dhbufferapp

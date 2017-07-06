@@ -1,16 +1,17 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-    name: client-events-collector-deployment
+    name: events-collector-client
+    namespace: data
 spec:
   template:
     metadata:
       labels:
-        app: client-events-collector
+        app: events-collector
     spec:
       containers:
         - name: client-events-collector
-          image: davidgasquez/events-collector-client:0.1.0
+          image: bufferapp/events-collector:client
           imagePullPolicy: Always
       imagePullSecrets:
-        - name: dockerhub
+        - name: dhbufferapp

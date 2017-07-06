@@ -14,15 +14,16 @@ _sym_db = _symbol_database.Default()
 
 
 from buda.entities import funnel_pb2 as buda_dot_entities_dot_funnel__pb2
+from buda.entities import funnel_event_pb2 as buda_dot_entities_dot_funnel__event__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='buda/services/events_collector.proto',
   package='buda.services',
   syntax='proto3',
-  serialized_pb=_b('\n$buda/services/events_collector.proto\x12\rbuda.services\x1a\x1a\x62uda/entities/funnel.proto\"\x1b\n\x08Response\x12\x0f\n\x07message\x18\x01 \x01(\t2\\\n\x0f\x45ventsCollector\x12I\n\x10TrackFunnelEvent\x12\x1a.buda.entities.FunnelEvent\x1a\x17.buda.services.Response\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n$buda/services/events_collector.proto\x12\rbuda.services\x1a\x1a\x62uda/entities/funnel.proto\x1a buda/entities/funnel_event.proto\"\x1b\n\x08Response\x12\x0f\n\x07message\x18\x01 \x01(\t2\x9d\x01\n\x0f\x45ventsCollector\x12?\n\x0bTrackFunnel\x12\x15.buda.entities.Funnel\x1a\x17.buda.services.Response\"\x00\x12I\n\x10TrackFunnelEvent\x12\x1a.buda.entities.FunnelEvent\x1a\x17.buda.services.Response\"\x00\x62\x06proto3')
   ,
-  dependencies=[buda_dot_entities_dot_funnel__pb2.DESCRIPTOR,])
+  dependencies=[buda_dot_entities_dot_funnel__pb2.DESCRIPTOR,buda_dot_entities_dot_funnel__event__pb2.DESCRIPTOR,])
 
 
 
@@ -53,8 +54,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=83,
-  serialized_end=110,
+  serialized_start=117,
+  serialized_end=144,
 )
 
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
@@ -88,9 +89,14 @@ try:
       Args:
         channel: A grpc.Channel.
       """
+      self.TrackFunnel = channel.unary_unary(
+          '/buda.services.EventsCollector/TrackFunnel',
+          request_serializer=buda_dot_entities_dot_funnel__pb2.Funnel.SerializeToString,
+          response_deserializer=Response.FromString,
+          )
       self.TrackFunnelEvent = channel.unary_unary(
           '/buda.services.EventsCollector/TrackFunnelEvent',
-          request_serializer=buda_dot_entities_dot_funnel__pb2.FunnelEvent.SerializeToString,
+          request_serializer=buda_dot_entities_dot_funnel__event__pb2.FunnelEvent.SerializeToString,
           response_deserializer=Response.FromString,
           )
 
@@ -98,6 +104,13 @@ try:
   class EventsCollectorServicer(object):
     # missing associated documentation comment in .proto file
     pass
+
+    def TrackFunnel(self, request, context):
+      # missing associated documentation comment in .proto file
+      pass
+      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+      context.set_details('Method not implemented!')
+      raise NotImplementedError('Method not implemented!')
 
     def TrackFunnelEvent(self, request, context):
       # missing associated documentation comment in .proto file
@@ -109,9 +122,14 @@ try:
 
   def add_EventsCollectorServicer_to_server(servicer, server):
     rpc_method_handlers = {
+        'TrackFunnel': grpc.unary_unary_rpc_method_handler(
+            servicer.TrackFunnel,
+            request_deserializer=buda_dot_entities_dot_funnel__pb2.Funnel.FromString,
+            response_serializer=Response.SerializeToString,
+        ),
         'TrackFunnelEvent': grpc.unary_unary_rpc_method_handler(
             servicer.TrackFunnelEvent,
-            request_deserializer=buda_dot_entities_dot_funnel__pb2.FunnelEvent.FromString,
+            request_deserializer=buda_dot_entities_dot_funnel__event__pb2.FunnelEvent.FromString,
             response_serializer=Response.SerializeToString,
         ),
     }
@@ -128,6 +146,10 @@ try:
     only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
     # missing associated documentation comment in .proto file
     pass
+    def TrackFunnel(self, request, context):
+      # missing associated documentation comment in .proto file
+      pass
+      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
     def TrackFunnelEvent(self, request, context):
       # missing associated documentation comment in .proto file
       pass
@@ -142,6 +164,11 @@ try:
     only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
     # missing associated documentation comment in .proto file
     pass
+    def TrackFunnel(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+      # missing associated documentation comment in .proto file
+      pass
+      raise NotImplementedError()
+    TrackFunnel.future = None
     def TrackFunnelEvent(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
       # missing associated documentation comment in .proto file
       pass
@@ -156,12 +183,15 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_deserializers = {
-      ('buda.services.EventsCollector', 'TrackFunnelEvent'): buda_dot_entities_dot_funnel__pb2.FunnelEvent.FromString,
+      ('buda.services.EventsCollector', 'TrackFunnel'): buda_dot_entities_dot_funnel__pb2.Funnel.FromString,
+      ('buda.services.EventsCollector', 'TrackFunnelEvent'): buda_dot_entities_dot_funnel__event__pb2.FunnelEvent.FromString,
     }
     response_serializers = {
+      ('buda.services.EventsCollector', 'TrackFunnel'): Response.SerializeToString,
       ('buda.services.EventsCollector', 'TrackFunnelEvent'): Response.SerializeToString,
     }
     method_implementations = {
+      ('buda.services.EventsCollector', 'TrackFunnel'): face_utilities.unary_unary_inline(servicer.TrackFunnel),
       ('buda.services.EventsCollector', 'TrackFunnelEvent'): face_utilities.unary_unary_inline(servicer.TrackFunnelEvent),
     }
     server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
@@ -175,12 +205,15 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_serializers = {
-      ('buda.services.EventsCollector', 'TrackFunnelEvent'): buda_dot_entities_dot_funnel__pb2.FunnelEvent.SerializeToString,
+      ('buda.services.EventsCollector', 'TrackFunnel'): buda_dot_entities_dot_funnel__pb2.Funnel.SerializeToString,
+      ('buda.services.EventsCollector', 'TrackFunnelEvent'): buda_dot_entities_dot_funnel__event__pb2.FunnelEvent.SerializeToString,
     }
     response_deserializers = {
+      ('buda.services.EventsCollector', 'TrackFunnel'): Response.FromString,
       ('buda.services.EventsCollector', 'TrackFunnelEvent'): Response.FromString,
     }
     cardinalities = {
+      'TrackFunnel': cardinality.Cardinality.UNARY_UNARY,
       'TrackFunnelEvent': cardinality.Cardinality.UNARY_UNARY,
     }
     stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)

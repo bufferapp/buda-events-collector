@@ -7,7 +7,8 @@ import buda.services.events_collector_pb2_grpc as collector_grpc
 
 
 if __name__ == '__main__':
-    channel = grpc.insecure_channel('localhost:50051')
+    ip = 'events-collector.data'
+    channel = grpc.insecure_channel(ip + ':50051')
     stub = collector_grpc.EventsCollectorStub(channel)
 
     for i in range(1000):

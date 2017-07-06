@@ -53,15 +53,15 @@ if __name__ == '__main__':
     channel = grpc.insecure_channel('localhost:50051')
     stub = collector_grpc.EventsCollectorStub(channel)
 
-    test_funnels = [make_test_funnel() for i in range(100)]
+    test_funnels = [make_test_funnel() for i in range(10)]
 
     for funnel in test_funnels:
-        stub.TrackFunnel(funnel)
+        stub.CollectFunnel(funnel)
         time.sleep(0.1)
 
     test_funnels = [random.choice(test_funnels) for i in range(len(test_funnels) * 4)]
     test_funnel_events = [make_test_funnel_event(f) for f in test_funnels]
 
     for event in test_funnel_events:
-        stub.TrackFunnelEvent(event)
+        stub.CollectFunnelEvent(event)
         time.sleep(0.1)

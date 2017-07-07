@@ -13,6 +13,7 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
+from buda.entities import uuid_pb2 as buda_dot_entities_dot_uuid__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
@@ -20,59 +21,88 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='buda/entities/funnel.proto',
   package='buda.entities',
   syntax='proto3',
-  serialized_pb=_b('\n\x1a\x62uda/entities/funnel.proto\x12\rbuda.entities\x1a\x1fgoogle/protobuf/timestamp.proto\"\xae\x01\n\x0b\x46unnelEvent\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12.\n\ncreated_at\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\tfunnel_id\x18\x04 \x01(\t\x12\x17\n\x0f\x66unnel_event_id\x18\x05 \x01(\t\x12&\n\x04tags\x18\x06 \x03(\x0b\x32\x18.buda.entities.FunnelTag\"\'\n\tFunnelTag\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\tb\x06proto3')
+  serialized_pb=_b('\n\x1a\x62uda/entities/funnel.proto\x12\rbuda.entities\x1a\x18\x62uda/entities/uuid.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe9\x01\n\x06\x46unnel\x12\x1f\n\x02id\x18\x01 \x01(\x0b\x32\x13.buda.entities.UUID\x12$\n\x07user_id\x18\x02 \x01(\x0b\x32\x13.buda.entities.UUID\x12.\n\ncreated_at\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0c\n\x04name\x18\x04 \x01(\t\x12-\n\x04tags\x18\x05 \x03(\x0b\x32\x1f.buda.entities.Funnel.TagsEntry\x1a+\n\tTagsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x62\x06proto3')
   ,
-  dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
+  dependencies=[buda_dot_entities_dot_uuid__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
 
 
 
-_FUNNELEVENT = _descriptor.Descriptor(
-  name='FunnelEvent',
-  full_name='buda.entities.FunnelEvent',
+_FUNNEL_TAGSENTRY = _descriptor.Descriptor(
+  name='TagsEntry',
+  full_name='buda.entities.Funnel.TagsEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='buda.entities.FunnelEvent.id', index=0,
+      name='key', full_name='buda.entities.Funnel.TagsEntry.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='user_id', full_name='buda.entities.FunnelEvent.user_id', index=1,
+      name='value', full_name='buda.entities.Funnel.TagsEntry.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=295,
+  serialized_end=338,
+)
+
+_FUNNEL = _descriptor.Descriptor(
+  name='Funnel',
+  full_name='buda.entities.Funnel',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
     _descriptor.FieldDescriptor(
-      name='created_at', full_name='buda.entities.FunnelEvent.created_at', index=2,
+      name='id', full_name='buda.entities.Funnel.id', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='user_id', full_name='buda.entities.Funnel.user_id', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='created_at', full_name='buda.entities.Funnel.created_at', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='funnel_id', full_name='buda.entities.FunnelEvent.funnel_id', index=3,
+      name='name', full_name='buda.entities.Funnel.name', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='funnel_event_id', full_name='buda.entities.FunnelEvent.funnel_event_id', index=4,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='tags', full_name='buda.entities.FunnelEvent.tags', index=5,
-      number=6, type=11, cpp_type=10, label=3,
+      name='tags', full_name='buda.entities.Funnel.tags', index=4,
+      number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -80,7 +110,7 @@ _FUNNELEVENT = _descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_FUNNEL_TAGSENTRY, ],
   enum_types=[
   ],
   options=None,
@@ -89,66 +119,34 @@ _FUNNELEVENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=79,
-  serialized_end=253,
+  serialized_start=105,
+  serialized_end=338,
 )
 
+_FUNNEL_TAGSENTRY.containing_type = _FUNNEL
+_FUNNEL.fields_by_name['id'].message_type = buda_dot_entities_dot_uuid__pb2._UUID
+_FUNNEL.fields_by_name['user_id'].message_type = buda_dot_entities_dot_uuid__pb2._UUID
+_FUNNEL.fields_by_name['created_at'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_FUNNEL.fields_by_name['tags'].message_type = _FUNNEL_TAGSENTRY
+DESCRIPTOR.message_types_by_name['Funnel'] = _FUNNEL
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-_FUNNELTAG = _descriptor.Descriptor(
-  name='FunnelTag',
-  full_name='buda.entities.FunnelTag',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='key', full_name='buda.entities.FunnelTag.key', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='buda.entities.FunnelTag.value', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=255,
-  serialized_end=294,
-)
+Funnel = _reflection.GeneratedProtocolMessageType('Funnel', (_message.Message,), dict(
 
-_FUNNELEVENT.fields_by_name['created_at'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
-_FUNNELEVENT.fields_by_name['tags'].message_type = _FUNNELTAG
-DESCRIPTOR.message_types_by_name['FunnelEvent'] = _FUNNELEVENT
-DESCRIPTOR.message_types_by_name['FunnelTag'] = _FUNNELTAG
-
-FunnelEvent = _reflection.GeneratedProtocolMessageType('FunnelEvent', (_message.Message,), dict(
-  DESCRIPTOR = _FUNNELEVENT,
+  TagsEntry = _reflection.GeneratedProtocolMessageType('TagsEntry', (_message.Message,), dict(
+    DESCRIPTOR = _FUNNEL_TAGSENTRY,
+    __module__ = 'buda.entities.funnel_pb2'
+    # @@protoc_insertion_point(class_scope:buda.entities.Funnel.TagsEntry)
+    ))
+  ,
+  DESCRIPTOR = _FUNNEL,
   __module__ = 'buda.entities.funnel_pb2'
-  # @@protoc_insertion_point(class_scope:buda.entities.FunnelEvent)
+  # @@protoc_insertion_point(class_scope:buda.entities.Funnel)
   ))
-_sym_db.RegisterMessage(FunnelEvent)
-
-FunnelTag = _reflection.GeneratedProtocolMessageType('FunnelTag', (_message.Message,), dict(
-  DESCRIPTOR = _FUNNELTAG,
-  __module__ = 'buda.entities.funnel_pb2'
-  # @@protoc_insertion_point(class_scope:buda.entities.FunnelTag)
-  ))
-_sym_db.RegisterMessage(FunnelTag)
+_sym_db.RegisterMessage(Funnel)
+_sym_db.RegisterMessage(Funnel.TagsEntry)
 
 
+_FUNNEL_TAGSENTRY.has_options = True
+_FUNNEL_TAGSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 # @@protoc_insertion_point(module_scope)

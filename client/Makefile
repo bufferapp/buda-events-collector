@@ -5,7 +5,7 @@ all: run
 
 .PHONY: run
 run:
-	docker run -d --net=host $(IMAGE_NAME)
+	docker run --net=host $(IMAGE_NAME)
 
 .PHONY: build
 build:

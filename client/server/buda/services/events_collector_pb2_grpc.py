@@ -16,13 +16,13 @@ class EventsCollectorStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.CollectFunnel = channel.unary_unary(
-        '/buda.services.EventsCollector/CollectFunnel',
+    self.TrackFunnel = channel.unary_unary(
+        '/buda.services.EventsCollector/TrackFunnel',
         request_serializer=buda_dot_entities_dot_funnel__pb2.Funnel.SerializeToString,
         response_deserializer=buda_dot_services_dot_events__collector__pb2.Response.FromString,
         )
-    self.CollectFunnelEvent = channel.unary_unary(
-        '/buda.services.EventsCollector/CollectFunnelEvent',
+    self.TrackFunnelEvent = channel.unary_unary(
+        '/buda.services.EventsCollector/TrackFunnelEvent',
         request_serializer=buda_dot_entities_dot_funnel__event__pb2.FunnelEvent.SerializeToString,
         response_deserializer=buda_dot_services_dot_events__collector__pb2.Response.FromString,
         )
@@ -32,14 +32,14 @@ class EventsCollectorServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
-  def CollectFunnel(self, request, context):
+  def TrackFunnel(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def CollectFunnelEvent(self, request, context):
+  def TrackFunnelEvent(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -49,13 +49,13 @@ class EventsCollectorServicer(object):
 
 def add_EventsCollectorServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'CollectFunnel': grpc.unary_unary_rpc_method_handler(
-          servicer.CollectFunnel,
+      'TrackFunnel': grpc.unary_unary_rpc_method_handler(
+          servicer.TrackFunnel,
           request_deserializer=buda_dot_entities_dot_funnel__pb2.Funnel.FromString,
           response_serializer=buda_dot_services_dot_events__collector__pb2.Response.SerializeToString,
       ),
-      'CollectFunnelEvent': grpc.unary_unary_rpc_method_handler(
-          servicer.CollectFunnelEvent,
+      'TrackFunnelEvent': grpc.unary_unary_rpc_method_handler(
+          servicer.TrackFunnelEvent,
           request_deserializer=buda_dot_entities_dot_funnel__event__pb2.FunnelEvent.FromString,
           response_serializer=buda_dot_services_dot_events__collector__pb2.Response.SerializeToString,
       ),

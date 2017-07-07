@@ -21,7 +21,6 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_pb=_b('\n\x17\x62uda/entities/utm.proto\x12\rbuda.entities\"V\n\x03Utm\x12\x0e\n\x06source\x18\x01 \x01(\t\x12\x0e\n\x06medium\x18\x02 \x01(\t\x12\x10\n\x08\x63\x61mpaign\x18\x03 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x04 \x01(\t\x12\x0c\n\x04term\x18\x05 \x01(\tb\x06proto3')
 )
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -85,6 +84,7 @@ _UTM = _descriptor.Descriptor(
 )
 
 DESCRIPTOR.message_types_by_name['Utm'] = _UTM
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Utm = _reflection.GeneratedProtocolMessageType('Utm', (_message.Message,), dict(
   DESCRIPTOR = _UTM,

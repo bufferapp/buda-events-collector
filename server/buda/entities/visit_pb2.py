@@ -24,7 +24,6 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   serialized_pb=_b('\n\x19\x62uda/entities/visit.proto\x12\rbuda.entities\x1a\x17\x62uda/entities/utm.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbe\x01\n\x05Visit\x12\n\n\x02id\x18\x01 \x01(\t\x12-\n\ttimestamp\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0b\n\x03uri\x18\x03 \x01(\t\x12\n\n\x02ip\x18\x04 \x01(\t\x12\x1f\n\x03utm\x18\x05 \x01(\x0b\x32\x12.buda.entities.Utm\x12,\n\nuser_agent\x18\x06 \x01(\x0b\x32\x18.buda.entities.UserAgent\x12\x12\n\nvisitor_id\x18\x07 \x01(\t\"-\n\tUserAgent\x12\x0f\n\x07\x62rowser\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\tb\x06proto3')
   ,
   dependencies=[buda_dot_entities_dot_utm__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -144,6 +143,7 @@ _VISIT.fields_by_name['utm'].message_type = buda_dot_entities_dot_utm__pb2._UTM
 _VISIT.fields_by_name['user_agent'].message_type = _USERAGENT
 DESCRIPTOR.message_types_by_name['Visit'] = _VISIT
 DESCRIPTOR.message_types_by_name['UserAgent'] = _USERAGENT
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Visit = _reflection.GeneratedProtocolMessageType('Visit', (_message.Message,), dict(
   DESCRIPTOR = _VISIT,

@@ -50,7 +50,8 @@ def make_test_funnel_event(funnel):
     return event
 
 if __name__ == '__main__':
-    channel = grpc.insecure_channel('localhost:50051')
+    ip = 'events-collector.data'
+    channel = grpc.insecure_channel(ip + ':50051')
     stub = collector_grpc.EventsCollectorStub(channel)
 
     test_funnels = [make_test_funnel() for i in range(10)]

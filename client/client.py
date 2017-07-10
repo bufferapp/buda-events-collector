@@ -6,12 +6,14 @@ import random
 from buda.entities.funnel_pb2 import Funnel
 from buda.entities.funnel_event_pb2 import FunnelEvent
 from buda.entities.link_pb2 import Link
-from buda.entities.uuid_pb2 import UUID
+from buda.entities.uuid_pb2 import Uuid
 
 import buda.services.events_collector_pb2_grpc as collector_grpc
 
+
 def new_uuid():
-    return UUID(id=uuid.uuid4().hex)
+    return Uuid(id=uuid.uuid4().hex)
+
 
 def make_test_funnel():
     funnel_id = new_uuid()
@@ -27,6 +29,7 @@ def make_test_funnel():
     funnel.tags['foo'] = 'bar'
 
     return funnel
+
 
 def make_test_funnel_event(funnel):
     funnel_event_id = new_uuid()
@@ -48,6 +51,7 @@ def make_test_funnel_event(funnel):
         event.links.extend([link])
 
     return event
+
 
 if __name__ == '__main__':
     ip = 'events-collector.data'

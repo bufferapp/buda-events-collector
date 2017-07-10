@@ -4,13 +4,10 @@ ENV GRPC_PYTHON_VERSION 1.4.0
 RUN python -m pip install --upgrade pip
 RUN pip install grpcio==${GRPC_PYTHON_VERSION} grpcio-tools==${GRPC_PYTHON_VERSION}
 
-RUN mkdir -p /usr/src/app
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
 WORKDIR /usr/src/app
-
-COPY requirements.txt /usr/src/app/
-RUN pip install --no-cache-dir -r requirements.txt
-
 COPY server.py /usr/src/app/server.py
-COPY buda /usr/src/app/buda
 
 CMD ["python", "-u", "server.py"]

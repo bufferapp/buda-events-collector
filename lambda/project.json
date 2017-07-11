@@ -1,8 +1,0 @@
-{
-  "name": "buffer-app-events-to-firehose",
-  "nameTemplate": "{{.Function.Name}}",
-  "description": "Test!",
-  "memory": 512,
-  "timeout": 5,
-  "environment": {}
-}

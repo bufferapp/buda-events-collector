@@ -54,7 +54,7 @@ def make_test_funnel_event(funnel):
 
 
 if __name__ == '__main__':
-    ip = 'events-collector.data'
+    ip = 'events-collector'
     channel = grpc.insecure_channel(ip + ':50051')
     stub = collector_grpc.EventsCollectorStub(channel)
 

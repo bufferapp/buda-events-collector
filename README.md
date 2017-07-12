@@ -10,6 +10,14 @@ You can communicate with _Buffer Events Collector_ using gRPC. Create or use a l
 
 ## Development
 
+Before starting, create a `.env` file inside the `server` folder containing your AWS credentials:
+
+```
+AWS_ACCESS_KEY_ID=1234567890ASDFGHJKL
+AWS_SECRET_ACCESS_KEY=QWERTYUIOPASDFGHJKLZXCVBNM
+AWS_DEFAULT_REGION=us-east-1
+```
+
 The main logic of the Events Collector resided under the `server.py`. If you want to run the server locally in Docker you need to run `make build && make run` inside the _server_ folder and then, in another terminal, run `make build && make run` this time inside the _client_ folder. 
 
 ## Deployment

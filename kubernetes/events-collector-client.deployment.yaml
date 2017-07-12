@@ -7,10 +7,10 @@ spec:
   template:
     metadata:
       labels:
-        app: events-collector
+        app: events-collector-client
     spec:
       containers:
-        - name: client-events-collector
+        - name: events-collector-client
           image: bufferapp/events-collector:client
           imagePullPolicy: Always
       imagePullSecrets:

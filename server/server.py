@@ -30,13 +30,13 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         return json.dumps(response)
 
     def CollectFunnelEvent(self, funnel_event, context):
-        print('Collecting funnel_event: {}'.format(funnel_event.id))
+        logger.info('Collecting funnel_event: {}'.format(funnel_event.id))
         data = funnel_event.SerializeToString()
         response = self.send_data_to_stream(data, 'buda_funnel_events')
         return Response(message=response)
 
     def CollectFunnel(self, funnel, context):
-        print('Collecting funnel: {}'.format(funnel.id))
+        logger.info('Collecting funnel: {}'.format(funnel.id))
         data = funnel.SerializeToString()
 
         response = self.send_data_to_stream(data, 'buda_funnels')

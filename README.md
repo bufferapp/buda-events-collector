@@ -1,10 +1,12 @@
-# Buffer Events Collector
+# Events Collector
 
-A [gRPC](https://grpc.io/) server that collects different events. The events are sent to specific Kinesis streams to be consumed later. You can check what events are supported in the [service definition][events_collector] inside [BUDA Protobufs](https://github.com/bufferapp/buda-protobufs) repository.
+A [gRPC](https://grpc.io/) server part of the [Buffer Unified Data Architecture][buda] that collects different events. The events are sent to specific Kinesis streams to be consumed later. You can check what events are supported in the [service definition][events_collector] inside [BUDA Protobufs](https://github.com/bufferapp/buda-protobufs) repository.
+
+[buda]: https://paper.dropbox.com/doc/Buffer-Unified-Data-Architecture-Yu9JtqkwNnQOHmeFynDS3
 
 ## Usage
 
-You can communicate with _Buffer Events Collector_ using gRPC. Create or use a library for your prefered language and call the [available methods][events_collector]!
+You can communicate with the _Events Collector_ using gRPC. Create or use a library for your prefered language and call the [available methods][events_collector]!
 
 [events_collector]: https://github.com/bufferapp/buda-protobufs/blob/master/buda/services/events_collector.proto
 
@@ -22,7 +24,7 @@ The main logic of the Events Collector resided under the `server.py`. If you wan
 
 ## Deployment
 
-You can deploy _Buffer Events Collector_ to Kubernetes using the YAML files located in the [`kubernetes`](kubernetes/) folder. Before creating any new resources check that you have `aws` secrets in place! 
+You can deploy the collector server to Kubernetes using the YAML files located in the [`kubernetes`](kubernetes/) folder. Before creating any new resources check that you have `aws` secrets in place! 
 
 The collector requires a Deployment and a Service. you can create both resources with `kubectl`:
 

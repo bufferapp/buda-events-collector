@@ -1,3 +1,4 @@
+import os
 import grpc
 import uuid
 import time
@@ -54,7 +55,7 @@ def make_test_funnel_event(funnel):
 
 
 if __name__ == '__main__':
-    ip = 'events-collector'
+    ip = os.environ.get('EVENTS_COLLECTOR_HOSTNAME', 'events-collector')
     channel = grpc.insecure_channel(ip + ':50051')
     stub = collector_grpc.EventsCollectorStub(channel)
 

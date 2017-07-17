@@ -20,7 +20,7 @@ AWS_SECRET_ACCESS_KEY=QWERTYUIOPASDFGHJKLZXCVBNM
 AWS_DEFAULT_REGION=us-east-1
 ```
 
-The main logic of the Events Collector resided under the `server.py`. If you want to run the server locally in Docker you need to run `make build && make run` inside the _server_ folder and then, in another terminal, run `make build && make run` this time inside the _client_ folder. 
+The main logic of the Events Collector resided under the `server.py`. If you want to run the server locally in Docker you need to run `make build && make run` and then, in another terminal, run `make build && make run` inside the _client_ folder. 
 
 ## Deployment
 

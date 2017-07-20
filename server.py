@@ -5,8 +5,8 @@ import boto3
 import json
 import logging
 
-from buda.services.events_collector_pb2 import Response
-import buda.services.events_collector_pb2_grpc as collector_grpc
+from buda.events_collector_service_pb2 import Response
+import buda.events_collector_service_pb2_grpc as collector_grpc
 
 logging.basicConfig()
 

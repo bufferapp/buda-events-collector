@@ -4,12 +4,12 @@ import uuid
 import time
 import random
 
-from buda.entities.funnel_pb2 import Funnel
-from buda.entities.funnel_event_pb2 import FunnelEvent
-from buda.entities.link_pb2 import Link
-from buda.entities.uuid_pb2 import Uuid
+from buda.funnel_pb2 import Funnel
+from buda.funnel_event_pb2 import FunnelEvent
+from buda.link_pb2 import Link
+from buda.uuid_pb2 import Uuid
 
-import buda.services.events_collector_pb2_grpc as collector_grpc
+import buda.events_collector_service_pb2_grpc as collector_grpc
 
 
 def new_uuid():

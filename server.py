@@ -5,8 +5,8 @@ import boto3
 import json
 import logging
 
-from buda.events_collector_service_pb2 import Response
-import buda.events_collector_service_pb2_grpc as collector_grpc
+from buda.services.events_collector_pb2 import Response
+import buda.services.events_collector_pb2_grpc as collector_grpc
 
 logging.basicConfig()
 
@@ -42,6 +42,10 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         response = self.send_data_to_stream(data, 'buda_funnels')
         return Response(message=response)
 
+    def CollectSubscriptionCancelled(self, subscription_cancelled, context):
+        logger.info('Collecting subscription cancelled: {}'.format(subscription_cancelled.subscription_id))
+
+        return Response(message='')
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

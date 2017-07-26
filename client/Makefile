@@ -5,7 +5,7 @@ all: run
 
 .PHONY: run
 run:
-	docker run -e EVENTS_COLLECTOR_HOSTNAME=localhost --net=host $(IMAGE_NAME)
+	docker run --rm -e EVENTS_COLLECTOR_HOSTNAME=localhost --net=host $(IMAGE_NAME)
 
 .PHONY: build
 build:

@@ -44,7 +44,9 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
     def CollectSubscriptionCancelled(self, subscription_cancelled, context):
         logger.info('Collecting subscription cancelled: {}'.format(subscription_cancelled.subscription_id))
+        data = subscription_cancelled.SerializeToString()
 
+        response = self.send_data_to_stream(data, 'buda_subscription_cancelled')
         return Response(message='')
 
 if __name__ == '__main__':

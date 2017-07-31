@@ -5,8 +5,8 @@ import boto3
 import json
 import logging
 
-from buda.services.events_collector_pb2 import Response
-import buda.services.events_collector_pb2_grpc as collector_grpc
+from buda.services.events_collector_service_pb2 import Response
+import buda.services.events_collector_service_pb2_grpc as collector_grpc
 
 logging.basicConfig()
 
@@ -47,6 +47,16 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         data = subscription_cancelled.SerializeToString()
 
         response = self.send_data_to_stream(data, 'buda_subscription_cancelled')
+        return Response(message='')
+
+    def CollectVisit(self, visit, context):
+        logger.info('Collecting visit: {}'.format(visit.id))
+        data = visit.SerializeToString()
+
+        print(visit.visitor_id)
+        print(visit.uri)
+        print(visit.ip)
+        #response = self.send_data_to_stream(data, 'buda_')
         return Response(message='')
 
 if __name__ == '__main__':

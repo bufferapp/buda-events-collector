@@ -19,6 +19,7 @@ def new_uuid():
 
 def make_test_subscription_cancelled():
     event = SubscriptionCancelled(
+        id=new_uuid(),
         user_id=new_uuid(),
         subscription_id=new_uuid()
     )
@@ -64,25 +65,30 @@ def make_test_funnel_event(funnel):
 
     return event
 
+def run_funnels_test():
+    test_funnels = [make_test_funnel() for i in range(10)]
+
+    for funnel in test_funnels:
+        stub.CollectFunnel(funnel)
+        time.sleep(0.1)
+
+    test_funnels = [random.choice(test_funnels) for i in range(len(test_funnels) * 4)]
+    test_funnel_events = [make_test_funnel_event(f) for f in test_funnels]
+
+    for event in test_funnel_events:
+        stub.CollectFunnelEvent(event)
+        time.sleep(0.1)
+
+def run_subscriptions_test():
+    events = [make_test_subscription_cancelled() for i in range(1000)]
+
+    for event in events:
+        stub.CollectSubscriptionCancelled(event)
+        time.sleep(0.1)
 
 if __name__ == '__main__':
     ip = os.environ.get('EVENTS_COLLECTOR_HOSTNAME', 'events-collector')
     channel = grpc.insecure_channel(ip + ':50051')
     stub = collector_grpc.EventsCollectorStub(channel)
 
-    event = make_test_subscription_cancelled()
-
-    stub.CollectSubscriptionCancelled(event)
-
-    # test_funnels = [make_test_funnel() for i in range(10)]
-    #
-    # for funnel in test_funnels:
-    #     stub.CollectFunnel(funnel)
-    #     time.sleep(0.1)
-    #
-    # test_funnels = [random.choice(test_funnels) for i in range(len(test_funnels) * 4)]
-    # test_funnel_events = [make_test_funnel_event(f) for f in test_funnels]
-    #
-    # for event in test_funnel_events:
-    #     stub.CollectFunnelEvent(event)
-    #     time.sleep(0.1)
+    run_subscriptions_test( )

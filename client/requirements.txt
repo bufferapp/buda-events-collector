@@ -1,1 +1,1 @@
-https://github.com/bufferapp/buda-protobufs/releases/download/0.2.0/buda-python-0.2.0.tar.gz
+/tmp/buda-python-0.3.0.tar.gz

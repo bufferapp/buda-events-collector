@@ -53,10 +53,14 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         logger.info('Collecting visit: {}'.format(visit.id))
         data = visit.SerializeToString()
 
-        print(visit.visitor_id)
-        print(visit.uri)
-        print(visit.ip)
-        #response = self.send_data_to_stream(data, 'buda_')
+        response = self.send_data_to_stream(data, 'buda_visits')
+        return Response(message='')
+
+    def CollectSignup(self, signup, context):
+        logger.info('Collecting signup: {}'.format(signup.id))
+        data = signup.SerializeToString()
+
+        response = self.send_data_to_stream(data, 'buda_signups')
         return Response(message='')
 
 if __name__ == '__main__':

@@ -42,6 +42,21 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         response = self.send_data_to_stream(data, 'buda_funnels')
         return Response(message=response)
 
+
+    def CollectSubscriptionCreated(self, subscription_created, context):
+        logger.info('Collecting subscription created {}'.format(subscription_created.id))
+        data = subscription_created.SerializeToString()
+
+        response = self.send_data_to_stream(data, 'buda_subscription_created')
+        return Response(message='')
+
+    def CollectSubscriptionPeriodUpdated(self, subscription_period_updated, context):
+        logger.info('Collecting subscription period updated {}'.format(subscription_period_updated.id))
+        data = period_updated.SerializeToString()
+
+        response = self.send_data_to_stream(data, 'buda_subscription_period_updated')
+        return Response(message='')
+
     def CollectSubscriptionCancelled(self, subscription_cancelled, context):
         logger.info('Collecting subscription cancelled: {}'.format(subscription_cancelled.subscription_id))
         data = subscription_cancelled.SerializeToString()

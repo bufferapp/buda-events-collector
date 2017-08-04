@@ -52,7 +52,7 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
     def CollectSubscriptionPeriodUpdated(self, subscription_period_updated, context):
         logger.info('Collecting subscription period updated {}'.format(subscription_period_updated.id))
-        data = period_updated.SerializeToString()
+        data = subscription_period_updated.SerializeToString()
 
         response = self.send_data_to_stream(data, 'buda_subscription_period_updated')
         return Response(message='')

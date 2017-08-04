@@ -9,7 +9,7 @@ from buda.entities.funnel_event_pb2 import FunnelEvent
 from buda.entities.link_pb2 import Link
 from buda.entities.uuid_pb2 import Uuid
 from buda.entities.visit_pb2 import Visit
-#from buda.entities.subscription_cancelled_pb2 import SubscriptionCancelled
+from buda.entities.subscription_cancelled_pb2 import SubscriptionCancelled
 
 import buda.services.events_collector_service_pb2_grpc as collector_grpc
 
@@ -80,12 +80,11 @@ def run_funnels_test(stub):
         stub.CollectFunnelEvent(event)
         time.sleep(0.1)
 
-# def run_subscriptions_test(stub):
-#     events = [make_test_subscription_cancelled() for i in range(1000)]
-#
-#     for event in events:
-#         stub.CollectSubscriptionCancelled(event)
-#         time.sleep(0.1)
+def run_subscriptions_test(stub):
+    events = [make_test_subscription_cancelled() for i in range(100)]
+    for event in events:
+        stub.CollectSubscriptionCancelled(event)
+        time.sleep(0.1)
 
 def run_visit_test(stub):
     visit = Visit(id=new_uuid())
@@ -97,4 +96,5 @@ if __name__ == '__main__':
     channel = grpc.insecure_channel(ip + ':50051')
     stub = collector_grpc.EventsCollectorStub(channel)
 
-    run_visit_test(stub)
+    #run_visit_test(stub)
+    run_subscriptions_test(stub)

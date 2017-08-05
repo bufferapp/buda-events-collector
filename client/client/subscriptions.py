@@ -33,9 +33,9 @@ def make_test_subscription_created():
         ),
         payment = SubscriptionCreated.Payment(
             id=new_uuid(),
-            payment_type = PaymentType.Value('BANK'),
-            payment_amount = 999.99,
-            payment_currency = 'USD'
+            type = PaymentType.Value('BANK'),
+            amount = 999.99,
+            currency = 'USD'
         )
     )
 
@@ -65,9 +65,9 @@ def make_test_subscription_period_updated(sub_id=new_uuid(), user_id=new_uuid())
         ),
         payment = SubscriptionPeriodUpdated.Payment(
             id=new_uuid(),
-            payment_type = PaymentType.Value('BANK'),
-            payment_amount = 999.99,
-            payment_currency = 'USD'
+            type = PaymentType.Value('BANK'),
+            amount = 999.99,
+            currency = 'USD'
         )
     )
 

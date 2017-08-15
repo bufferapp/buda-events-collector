@@ -1,9 +1,8 @@
 from concurrent import futures
 import time
 import grpc
-import boto3
-import json
 import logging
+from kiner.producer import KinesisProducer
 
 from buda.services.events_collector_service_pb2 import Response
 import buda.services.events_collector_service_pb2_grpc as collector_grpc
@@ -19,64 +18,73 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
     def __init__(self):
-        self.client = boto3.client('kinesis')
-
-    def send_data_to_stream(self, data, stream_name):
-        response = self.client.put_record(
-            StreamName=stream_name,
-            Data=data,
-            PartitionKey='string'
+        self.funnel_events_producer = KinesisProducer(
+            'buda_funnel_events', batch_size=50, max_retries=5, threads=5
         )
-        return json.dumps(response)
+        self.funnels_producer = KinesisProducer(
+            'buda_funnels', batch_size=50, max_retries=5, threads=5
+        )
+        self.subscription_created_producer = KinesisProducer(
+            'buda_subscription_created', batch_size=50,
+            max_retries=5, threads=5
+        )
+        self.subscription_period_updated_producer = KinesisProducer(
+            'buda_subscription_period_updated', batch_size=50,
+            max_retries=5, threads=5
+        )
+        self.subscription_period_canceled_producer = KinesisProducer(
+            'buda_subscription_period_canceled', batch_size=50,
+            max_retries=5, threads=5
+        )
+        self.buda_visits_producer = KinesisProducer(
+            'buda_visits', batch_size=50, max_retries=5, threads=5
+        )
+        self.buda_signups_producer = KinesisProducer(
+            'buda_signups', batch_size=50, max_retries=5, threads=5
+        )
 
     def CollectFunnelEvent(self, funnel_event, context):
         logger.info('Collecting funnel_event: {}'.format(funnel_event.id))
         data = funnel_event.SerializeToString()
-        response = self.send_data_to_stream(data, 'buda_funnel_events')
-        return Response(message=response)
+        self.funnel_events_producer.put_record(data)
+        return Response(message='OK')
 
     def CollectFunnel(self, funnel, context):
         logger.info('Collecting funnel: {}'.format(funnel.id))
         data = funnel.SerializeToString()
-
-        response = self.send_data_to_stream(data, 'buda_funnels')
-        return Response(message=response)
-
+        self.funnels_producer.put_record(data)
+        return Response(message='OK')
 
     def CollectSubscriptionCreated(self, subscription_created, context):
         logger.info('Collecting subscription created {}'.format(subscription_created.id))
         data = subscription_created.SerializeToString()
-
-        response = self.send_data_to_stream(data, 'buda_subscription_created')
-        return Response(message='')
+        self.subscription_created_producer.put_record(data)
+        return Response(message='OK')
 
     def CollectSubscriptionPeriodUpdated(self, subscription_period_updated, context):
         logger.info('Collecting subscription period updated {}'.format(subscription_period_updated.id))
         data = subscription_period_updated.SerializeToString()
-
-        response = self.send_data_to_stream(data, 'buda_subscription_period_updated')
-        return Response(message='')
+        self.subscription_period_updated_producer.put_record(data)
+        return Response(message='OK')
 
     def CollectSubscriptionCancelled(self, subscription_cancelled, context):
         logger.info('Collecting subscription cancelled: {}'.format(subscription_cancelled.subscription_id))
         data = subscription_cancelled.SerializeToString()
-
-        response = self.send_data_to_stream(data, 'buda_subscription_cancelled')
-        return Response(message='')
+        self.subscription_period_canceled_producer.put_record(data)
+        return Response(message='OK')
 
     def CollectVisit(self, visit, context):
         logger.info('Collecting visit: {}'.format(visit.id))
         data = visit.SerializeToString()
-
-        response = self.send_data_to_stream(data, 'buda_visits')
-        return Response(message='')
+        self.buda_visits_producer.put_record(data)
+        return Response(message='OK')
 
     def CollectSignup(self, signup, context):
         logger.info('Collecting signup: {}'.format(signup.id))
         data = signup.SerializeToString()
+        self.buda_signups_producer.put_record(data)
+        return Response(message='OK')
 
-        response = self.send_data_to_stream(data, 'buda_signups')
-        return Response(message='')
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

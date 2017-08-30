@@ -1,8 +1,13 @@
+#!/usr/bin/env python
+
 from concurrent import futures
 import time
 import grpc
 import logging
+import sys
+import boto3
 from kiner.producer import KinesisProducer
+import signal
 
 from buda.services.events_collector_service_pb2 import Response
 import buda.services.events_collector_service_pb2_grpc as collector_grpc
@@ -69,6 +74,12 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.send('signups', signup)
         return Response(message='OK')
 
+not_interupted = True
+
+def handler_stop_signals(signum, frame):
+    global not_interupted
+    not_interupted = False
+
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     logger.info('Server initialized')
@@ -83,8 +94,12 @@ if __name__ == '__main__':
     server.start()
     logger.info('Server started')
 
-    try:
-        while True:
-            time.sleep(_ONE_DAY_IN_SECONDS)
-    except KeyboardInterrupt:
-        server.stop(0)
+    signal.signal(signal.SIGINT, handler_stop_signals)
+    signal.signal(signal.SIGTERM, handler_stop_signals)
+
+    while not_interupted:
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            server.stop(0)
+    server.stop(0)

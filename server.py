@@ -35,7 +35,11 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         return producer
 
     def send(self, name, message):
-        logger.info('Collecting {} : {}'.format(name, message.id))
+        if message.HasField('id'):
+            logger.info('Collecting {} : {}'.format(name, message.id))
+        else:
+            logger.warning('Expecting message for stream {} to have an id field!'.format(name))
+
         data = message.SerializeToString()
         self.producers[name].put_record(data)
 

@@ -26,10 +26,8 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.add_producer('visits')
         self.add_producer('signups')
 
-    def add_producer(self, name, batch_size=50, max_retries=5, threads=5):
-        producer = KinesisProducer(
-            'buda_{}'.format(name), batch_size=50, max_retries=5, threads=5
-        )
+    def add_producer(self, name, **args):
+        producer = KinesisProducer('buda_{}'.format(name), **args)
 
         self.producers[name] = producer
         return producer

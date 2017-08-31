@@ -21,6 +21,8 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
     def __init__(self):
+        self.kinesis = boto3.client('kinesis', endpoint_url='http://aws-localstack:4568')
+
         self.producers = {}
 
         self.add_producer('funnel_events')
@@ -32,7 +34,7 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.add_producer('signups')
 
     def add_producer(self, name, **args):
-        producer = KinesisProducer('buda_{}'.format(name), **args)
+        producer = KinesisProducer('buda_{}'.format(name), kinesis_client=self.kinesis, **args)
 
         self.producers[name] = producer
         return producer

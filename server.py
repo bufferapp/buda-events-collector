@@ -21,7 +21,12 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
     def __init__(self):
-        self.kinesis = boto3.client('kinesis', endpoint_url='http://aws-localstack:4568')
+        self.kinesis_endpoint_url = os.environ.get('KINESIS_ENDPOINT_URL')
+
+        if kinesis_endpoint_url:
+            self.kinesis = boto3.client('kinesis', endpoint_url=kinesis_endpoint_url)
+        else:
+            self.kinesis = boto3.client('kinesis')
 
         self.producers = {}
 

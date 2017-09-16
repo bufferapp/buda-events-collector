@@ -13,9 +13,10 @@ from buda.entities.uuid_pb2 import Uuid
 from buda.entities.visit_pb2 import Visit
 
 from client.subscriptions import run_test
+from client import signups
+
 
 import buda.services.events_collector_service_pb2_grpc as collector_grpc
-
 
 def new_uuid():
     return Uuid(id=uuid.uuid4().hex)
@@ -63,6 +64,7 @@ def run_funnels_test(stub):
     for funnel in test_funnels:
         stub.CollectFunnel(funnel)
         time.sleep(0.1)
+    event.subscription.initial_period_end.FromDatetime(datetime.now() + timedelta(60))
 
     test_funnels = [random.choice(test_funnels) for i in range(len(test_funnels) * 4)]
     test_funnel_events = [make_test_funnel_event(f) for f in test_funnels]
@@ -99,7 +101,8 @@ if __name__ == '__main__':
     success = False
     while not success:
         try:
-            run_test(stub)
+           # run_test(stub)
+            signups.run_test(stub)
             success = True
         except grpc._channel._Rendezvous as e:
             print("Error connecting to server. Exponentially backing off... {}", e)

@@ -4,8 +4,6 @@ from concurrent import futures
 import time
 import grpc
 import logging
-import sys
-import boto3
 from kiner.producer import KinesisProducer
 import signal
 
@@ -17,6 +15,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
+
 
 class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
@@ -41,7 +40,9 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         if message.HasField('id'):
             logger.info('Collecting {} : {}'.format(name, message.id))
         else:
-            logger.warning('Expecting message for stream {} to have an id field!'.format(name))
+            logger.warning(
+                'Expecting message for stream {} to have an id field!'
+                .format(name))
 
         data = message.SerializeToString()
         self.producers[name].put_record(data)
@@ -58,7 +59,8 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.send('subscription_created', subscription_created)
         return Response(message='OK')
 
-    def CollectSubscriptionPeriodUpdated(self, subscription_period_updated, context):
+    def CollectSubscriptionPeriodUpdated(self,
+                                         subscription_period_updated, context):
         self.send('subscription_period_updated', subscription_period_updated)
         return Response(message='OK')
 
@@ -74,11 +76,14 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.send('signups', signup)
         return Response(message='OK')
 
+
 not_interupted = True
+
 
 def handler_stop_signals(signum, frame):
     global not_interupted
     not_interupted = False
+
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

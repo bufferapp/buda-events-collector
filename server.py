@@ -29,11 +29,15 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.add_producer('subscription_cancelled')
         self.add_producer('visits')
         self.add_producer('signups')
+        self.add_producer('actions_taken')
+
 
     def add_producer(self, name, **args):
         producer = KinesisProducer('buda_{}'.format(name), **args)
-
         self.producers[name] = producer
+
+        logger.info('Added producer {}'.format(name))
+
         return producer
 
     def send(self, name, message):
@@ -74,6 +78,10 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
     def CollectSignup(self, signup, context):
         self.send('signups', signup)
+        return Response(message='OK')
+
+    def CollectActionTaken(self, action_taken, context):
+        self.send('actions_taken', action_taken)
         return Response(message='OK')
 
 

@@ -12,6 +12,7 @@ def make_test_action_taken():
 
     event.created_at.GetCurrentTime()
     event.metadata['userId'] = new_uuid().id
+    event.metadata['foo'] = 'bar'
 
     return event
 

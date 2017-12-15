@@ -4,8 +4,6 @@ from concurrent import futures
 import time
 import grpc
 import logging
-import sys
-import boto3
 from kiner.producer import KinesisProducer
 import signal
 
@@ -17,6 +15,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
+
 
 class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
@@ -30,18 +29,24 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.add_producer('subscription_cancelled')
         self.add_producer('visits')
         self.add_producer('signups')
+        self.add_producer('actions_taken')
+
 
     def add_producer(self, name, **args):
         producer = KinesisProducer('buda_{}'.format(name), **args)
-
         self.producers[name] = producer
+
+        logger.info('Added producer {}'.format(name))
+
         return producer
 
     def send(self, name, message):
         if message.HasField('id'):
             logger.info('Collecting {} : {}'.format(name, message.id))
         else:
-            logger.warning('Expecting message for stream {} to have an id field!'.format(name))
+            logger.warning(
+                'Expecting message for stream {} to have an id field!'
+                .format(name))
 
         data = message.SerializeToString()
         self.producers[name].put_record(data)
@@ -58,7 +63,8 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.send('subscription_created', subscription_created)
         return Response(message='OK')
 
-    def CollectSubscriptionPeriodUpdated(self, subscription_period_updated, context):
+    def CollectSubscriptionPeriodUpdated(self,
+                                         subscription_period_updated, context):
         self.send('subscription_period_updated', subscription_period_updated)
         return Response(message='OK')
 
@@ -74,11 +80,18 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.send('signups', signup)
         return Response(message='OK')
 
+    def CollectActionTaken(self, action_taken, context):
+        self.send('actions_taken', action_taken)
+        return Response(message='OK')
+
+
 not_interupted = True
+
 
 def handler_stop_signals(signum, frame):
     global not_interupted
     not_interupted = False
+
 
 if __name__ == '__main__':
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

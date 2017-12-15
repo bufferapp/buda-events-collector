@@ -1,4 +1,5 @@
 boto3
-https://github.com/bufferapp/buda-protobufs/releases/download/0.4.3/buda-python-0.4.3.tar.gz
+buffer_buda==0.5.1
 kiner
 checksumdir
+

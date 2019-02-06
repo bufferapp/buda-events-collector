@@ -1,5 +1,5 @@
 boto3
-buffer_buda==0.6.*
+buffer_buda==0.7.*
 kiner
 checksumdir
 

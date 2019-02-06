@@ -29,6 +29,7 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.add_producer('subscription_cancelled')
         self.add_producer('visits')
         self.add_producer('signups')
+        self.add_producer('signins')
         self.add_producer('actions_taken')
 
 
@@ -78,6 +79,10 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
     def CollectSignup(self, signup, context):
         self.send('signups', signup)
+        return Response(message='OK')
+
+    def CollectSignin(self, signin, context):
+        self.send('signins', signin)
         return Response(message='OK')
 
     def CollectActionTaken(self, action_taken, context):

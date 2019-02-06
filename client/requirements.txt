@@ -1,2 +1,2 @@
-buffer_buda==0.5.1
+buffer_buda==0.7.1
 

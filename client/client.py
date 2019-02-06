@@ -2,7 +2,7 @@ import os
 import grpc
 import time
 import buda.services.events_collector_service_pb2_grpc as collector_grpc
-from client import actions_taken
+from client import signins
 
 
 def get_stub(ip):
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     success = False
     while not success:
         try:
-            actions_taken.run_test(stub)
+            signins.run_test(stub)
             success = True
         except grpc._channel._Rendezvous as e:
             print(

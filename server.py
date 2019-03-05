@@ -4,8 +4,9 @@ from concurrent import futures
 import time
 import grpc
 import logging
-from kiner.producer import KinesisProducer
 import os
+from kiner.producer import KinesisProducer
+from google.protobuf.json_format import MessageToDict
 
 from buda.services.events_collector_service_pb2 import Response
 import buda.services.events_collector_service_pb2_grpc as collector_grpc
@@ -47,8 +48,11 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
             )
 
         data = message.SerializeToString()
+        message_json = MessageToDict(message)
+
         if os.getenv("ENV", "prod") == "dev":
             logger.info(data)
+
         self.producers[name].put_record(data)
 
     def CollectFunnelEvent(self, funnel_event, context):

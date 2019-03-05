@@ -1,10 +1,9 @@
-FROM grpc/python:1.4
+FROM python:3-slim
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 COPY server.py /usr/src/app/server.py
-COPY autoreload /usr/src/app/autoreload
 
 WORKDIR /usr/src/app
 

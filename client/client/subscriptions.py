@@ -12,31 +12,28 @@ from client.utils import *
 
 
 def make_test_subscription_created():
-    sub_id =new_uuid()
-    user_id=new_uuid()
+    sub_id = new_uuid()
+    user_id = new_uuid()
     plan_id = new_uuid()
-    plan_name = 'NewAwesomePlan'
-    gateway_customer_id = '123456789'
+    plan_name = "NewAwesomePlan"
+    gateway_customer_id = "123456789"
 
     event = SubscriptionCreated(
         id=new_uuid(),
         user_id=user_id,
         subscription=SubscriptionCreated.Subscription(
             id=sub_id,
-            status = SubscriptionStatus.Value('ACTIVE'),
-            plan_id = plan_id,
-            plan_name = plan_name,
-            gateway_customer_id = gateway_customer_id,
-            payment_terms = PaymentTerms.Value('NET_60'),
-            payment_schedule = PaymentSchedule.Value('QUARTERLY'),
-            term_value = 100000.57,
+            status=SubscriptionStatus.Value("ACTIVE"),
+            plan_id=plan_id,
+            plan_name=plan_name,
+            gateway_customer_id=gateway_customer_id,
+            payment_terms=PaymentTerms.Value("NET_60"),
+            payment_schedule=PaymentSchedule.Value("QUARTERLY"),
+            term_value=100000.57,
         ),
-        payment = SubscriptionCreated.Payment(
-            id=new_uuid(),
-            type = PaymentType.Value('BANK'),
-            amount = 999.99,
-            currency = 'USD'
-        )
+        payment=SubscriptionCreated.Payment(
+            id=new_uuid(), type=PaymentType.Value("BANK"), amount=999.99, currency="USD"
+        ),
     )
 
     event.created_at.GetCurrentTime()
@@ -45,30 +42,27 @@ def make_test_subscription_created():
 
     return event
 
+
 def make_test_subscription_cancelled(sub_id=new_uuid(), user_id=new_uuid()):
     event = SubscriptionCancelled(
-        id=new_uuid(),
-        user_id=user_id,
-        subscription_id=sub_id
+        id=new_uuid(), user_id=user_id, subscription_id=sub_id
     )
 
     event.created_at.GetCurrentTime()
 
     return event
+
+
 def make_test_subscription_period_updated(sub_id=new_uuid(), user_id=new_uuid()):
     event = SubscriptionPeriodUpdated(
         id=new_uuid(),
         user_id=user_id,
         subscription=SubscriptionPeriodUpdated.Subscription(
-            id=sub_id,
-            status = SubscriptionStatus.Value('ACTIVE')
+            id=sub_id, status=SubscriptionStatus.Value("ACTIVE")
         ),
-        payment = SubscriptionPeriodUpdated.Payment(
-            id=new_uuid(),
-            type = PaymentType.Value('BANK'),
-            amount = 999.99,
-            currency = 'USD'
-        )
+        payment=SubscriptionPeriodUpdated.Payment(
+            id=new_uuid(), type=PaymentType.Value("BANK"), amount=999.99, currency="USD"
+        ),
     )
 
     event.created_at.GetCurrentTime()
@@ -77,16 +71,18 @@ def make_test_subscription_period_updated(sub_id=new_uuid(), user_id=new_uuid())
 
     return event
 
+
 def run_test(stub):
-    subs = send_test_events(make_test_subscription_created,
-        stub.CollectSubscriptionCreated)
+    subs = send_test_events(
+        make_test_subscription_created, stub.CollectSubscriptionCreated
+    )
 
-    maker = lambda s: make_test_subscription_period_updated(s.subscription.id, s.user_id)
+    maker = lambda s: make_test_subscription_period_updated(
+        s.subscription.id, s.user_id
+    )
 
-    send_test_events_from_list(subs, maker,
-        stub.CollectSubscriptionPeriodUpdated)
+    send_test_events_from_list(subs, maker, stub.CollectSubscriptionPeriodUpdated)
 
     maker = lambda s: make_test_subscription_cancelled(s.subscription.id, s.user_id)
 
-    send_test_events_from_list(subs, maker,
-        stub.CollectSubscriptionCancelled)
+    send_test_events_from_list(subs, maker, stub.CollectSubscriptionCancelled)

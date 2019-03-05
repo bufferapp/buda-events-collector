@@ -5,14 +5,14 @@ from client.utils import new_uuid
 def make_test_action_taken():
     event = ActionTaken(
         id=new_uuid(),
-        application='my-awesome-app',
-        location='awesome_page',
-        action='amazing_button_clicked'
+        application="my-awesome-app",
+        location="awesome_page",
+        action="amazing_button_clicked",
     )
 
     event.created_at.GetCurrentTime()
-    event.metadata['userId'] = new_uuid().id
-    event.metadata['foo'] = 'bar'
+    event.metadata["userId"] = new_uuid().id
+    event.metadata["foo"] = "bar"
 
     return event
 

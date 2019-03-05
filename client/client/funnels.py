@@ -3,18 +3,15 @@ from buda.entities.funnel_event_pb2 import FunnelEvent
 
 from client.utils import *
 
+
 def make_test_funnel():
     funnel_id = new_uuid()
     user_id = new_uuid()
 
-    funnel = Funnel(
-        id=funnel_id,
-        user_id=user_id,
-        name='upgrade-path'
-    )
+    funnel = Funnel(id=funnel_id, user_id=user_id, name="upgrade-path")
 
     funnel.created_at.GetCurrentTime()
-    funnel.tags['foo'] = 'bar'
+    funnel.tags["foo"] = "bar"
 
     return funnel
 
@@ -27,11 +24,11 @@ def make_test_funnel_event(funnel):
         id=funnel_event_id,
         funnel_id=funnel.id,
         funnel_step_id=funnel_step_id,
-        user_id=funnel.user_id
+        user_id=funnel.user_id,
     )
 
     event.created_at.GetCurrentTime()
-    event.tags['foo'] = 'bar'
+    event.tags["foo"] = "bar"
 
     if random.random() < 0.01:
         event.funnel_end = True
@@ -39,6 +36,7 @@ def make_test_funnel_event(funnel):
         event.links.extend([link])
 
     return event
+
 
 def run_test(stub):
     test_funnels = [make_test_funnel() for i in range(10)]

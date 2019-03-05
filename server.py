@@ -5,7 +5,6 @@ import time
 import grpc
 import logging
 from kiner.producer import KinesisProducer
-import signal
 import os
 
 from buda.services.events_collector_service_pb2 import Response
@@ -15,8 +14,6 @@ logging.basicConfig()
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-
-_ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 
 class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
@@ -91,14 +88,6 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         return Response(message="OK")
 
 
-not_interupted = True
-
-
-def handler_stop_signals(signum, frame):
-    global not_interupted
-    not_interupted = False
-
-
 if __name__ == "__main__":
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     logger.info("Server initialized")
@@ -112,12 +101,9 @@ if __name__ == "__main__":
     server.start()
     logger.info("Server started")
 
-    signal.signal(signal.SIGINT, handler_stop_signals)
-    signal.signal(signal.SIGTERM, handler_stop_signals)
+    try:
+        while True:
+            time.sleep(10000)
+    except KeyboardInterrupt:
+        server.stop(0)
 
-    while not_interupted:
-        try:
-            time.sleep(1)
-        except KeyboardInterrupt:
-            server.stop(0)
-    server.stop(0)

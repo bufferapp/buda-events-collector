@@ -5,7 +5,7 @@ AWS_SECRET = -v $(HOME)/.aws:/root/.aws
 
 .PHONY: run
 run: build
-	docker run $(AWS_SECRET) -p 50051:50051 --rm $(IMAGE_NAME)
+	docker run -it $(AWS_SECRET) -p 50051:50051 --rm $(IMAGE_NAME) /bin/bash
 
 .PHONY: build
 build:
@@ -18,6 +18,19 @@ push: build
 .PHONY: dev
 dev: build
 	docker run -it $(AWS_SECRET) --net=host --rm -v $(PWD):/usr/src/app $(IMAGE_NAME) /bin/bash
+
+.PHONY: compile
+compile:
+	docker run -it --rm -v $(PWD):/usr/src/app $(IMAGE_NAME) \
+	/bin/bash -c "python -m grpc_tools.protoc \
+		--proto_path pb/ \
+		--python_out . \
+		--grpc_python_out . \
+		pb/buda/*/*.proto"
+
+.PHONY: clean
+clean:
+	sudo rm -rf buda/
 
 .PHONY: deploy
 deploy: build push

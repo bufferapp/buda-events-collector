@@ -10,6 +10,8 @@ from google.protobuf.json_format import MessageToDict
 
 from buda.services.events_collector_service_pb2 import Response
 import buda.services.events_collector_service_pb2_grpc as collector_grpc
+from grpc_health.v1 import health_pb2
+from grpc_health.v1 import health_pb2_grpc
 
 logging.basicConfig()
 
@@ -30,6 +32,10 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.add_producer("signups")
         self.add_producer("signins")
         self.add_producer("actions_taken")
+
+    def Check(self, request, context):
+        SERVING_STATUS = health_pb2.HealthCheckResponse.SERVING
+        return health_pb2.HealthCheckResponse(status=SERVING_STATUS)
 
     def add_producer(self, name, **args):
         producer = KinesisProducer("buda_{}".format(name), **args)
@@ -96,9 +102,11 @@ if __name__ == "__main__":
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     logger.info("Server initialized")
 
-    collector_grpc.add_EventsCollectorServicer_to_server(
-        EventsCollectorServicer(), server
-    )
+    service = EventsCollectorServicer()
+
+    collector_grpc.add_EventsCollectorServicer_to_server(service, server)
+    health_pb2_grpc.add_HealthServicer_to_server(service, server)
+
     logger.info("Servicer added")
 
     server.add_insecure_port("[::]:50051")

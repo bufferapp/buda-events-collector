@@ -5,7 +5,7 @@ AWS_SECRET = -v $(HOME)/.aws:/root/.aws
 
 .PHONY: run
 run: build
-	docker run -it $(AWS_SECRET) -p 50051:50051 --rm $(IMAGE_NAME) /bin/bash
+	docker run $(AWS_SECRET) -p 50051:50051 --rm $(IMAGE_NAME)
 
 .PHONY: build
 build:

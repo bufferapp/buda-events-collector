@@ -1,5 +1,6 @@
-boto3
-buffer_buda==0.7.*
-kiner
-checksumdir
-
+boto3==1.9.107
+kiner==0.7.0
+grpcio==1.19.0
+protobuf==3.7.0
+grpcio-health-checking==1.13.0
+grpcio-tools==1.19.0

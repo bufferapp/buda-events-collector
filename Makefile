@@ -1,23 +1,36 @@
-IMAGE_NAME:=bufferapp/events-collector:0.4.0
+IMAGE_NAME:=bufferapp/events-collector:0.5.0
+AWS_SECRET = -v $(HOME)/.aws:/root/.aws
 
-.PHONY: all
-all: run
+.DEFAULT_GOAL := run
 
 .PHONY: run
-run:
-	docker run --env-file .env -p 50051:50051 --rm $(IMAGE_NAME)
+run: build
+	docker run $(AWS_SECRET) -p 50051:50051 --rm $(IMAGE_NAME)
 
 .PHONY: build
 build:
 	 docker build . -t $(IMAGE_NAME)
 
 .PHONY: push
-push:
+push: build
 	 docker push $(IMAGE_NAME)
 
 .PHONY: dev
-dev:
-	docker run -it -e ENV=dev --env-file .env -p 50051:50051 --rm -v `pwd`:/usr/src/app $(IMAGE_NAME) /bin/bash
+dev: build
+	docker run -it $(AWS_SECRET) --net=host --rm -v $(PWD):/usr/src/app $(IMAGE_NAME) /bin/bash
+
+.PHONY: compile
+compile:
+	docker run -it --rm -v $(PWD):/usr/src/app $(IMAGE_NAME) \
+	/bin/bash -c "python -m grpc_tools.protoc \
+		--proto_path pb/ \
+		--python_out . \
+		--grpc_python_out . \
+		pb/buda/*/*.proto"
+
+.PHONY: clean
+clean:
+	sudo rm -rf buda/
 
 .PHONY: deploy
 deploy: build push

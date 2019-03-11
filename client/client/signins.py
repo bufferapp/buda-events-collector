@@ -1,6 +1,7 @@
 from buda.entities.signup_pb2 import Signup
 from client.utils import *
 
+
 def make_test_signin():
     event = Signup(
         id=new_uuid(),
@@ -13,6 +14,7 @@ def make_test_signin():
     event.created_at.GetCurrentTime()
 
     return event
+
 
 def run_test(stub):
     events = [make_test_signin() for i in range(100)]

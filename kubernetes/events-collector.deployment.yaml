@@ -1,36 +1,58 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: events-collector
     namespace: data
 spec:
-  template:
-    metadata:
-      labels:
-        app: events-collector
-    spec:
-      containers:
-        - name: events-collector
-          image: bufferapp/events-collector:0.4.0
-          imagePullPolicy: Always
-          env:
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                  secretKeyRef:
-                      name: aws
-                      key: access-key-id
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                  secretKeyRef:
-                      name: aws
-                      key: secret-access-key
-            - name: AWS_DEFAULT_REGION
-              valueFrom:
-                  secretKeyRef:
-                      name: aws
-                      key: default-region
-          ports:
-            - name: grpc
-              containerPort: 50051
-      imagePullSecrets:
-        - name: dhbufferapp
+    minReadySeconds: 5
+    replicas: 3
+    strategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxUnavailable: 1
+            maxSurge: 1
+    selector:
+        matchLabels:
+            app: events-collector
+    template:
+        metadata:
+            labels:
+                app: events-collector
+        spec:
+            containers:
+                - name: events-collector
+                  image: bufferapp/events-collector:0.5.0
+                  imagePullPolicy: Always
+                  readinessProbe:
+                      periodSeconds: 5
+                      exec:
+                          command: ["/bin/grpc_health_probe", "-addr=:8080"]
+                  livenessProbe:
+                      periodSeconds: 5
+                      exec:
+                          command: ["/bin/grpc_health_probe", "-addr=:8080"]
+                  resources:
+                      limits:
+                          cpu: 1500m
+                          memory: 3500Mi
+                  env:
+                      - name: AWS_ACCESS_KEY_ID
+                        valueFrom:
+                            secretKeyRef:
+                                name: aws
+                                key: access-key-id
+                      - name: AWS_SECRET_ACCESS_KEY
+                        valueFrom:
+                            secretKeyRef:
+                                name: aws
+                                key: secret-access-key
+                      - name: AWS_DEFAULT_REGION
+                        valueFrom:
+                            secretKeyRef:
+                                name: aws
+                                key: default-region
+                  ports:
+                      - name: grpc
+                        containerPort: 50051
+            imagePullSecrets:
+                - name: dhbufferapp

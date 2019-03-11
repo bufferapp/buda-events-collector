@@ -58,8 +58,8 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
         if os.getenv("ENV", "prod") == "dev":
             logger.info(data)
-
-        self.producers[name].put_record(data)
+        else:
+            self.producers[name].put_record(data)
 
     def CollectFunnelEvent(self, funnel_event, context):
         self.send("funnel_events", funnel_event)

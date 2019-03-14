@@ -1,11 +1,11 @@
 IMAGE_NAME:=bufferapp/events-collector:0.5.0
-AWS_SECRET = -v $(HOME)/.aws:/root/.aws
+EXTRA_FLAGS = -v $(HOME)/.aws:/root/.aws -e ENV=dev
 
 .DEFAULT_GOAL := run
 
 .PHONY: run
 run: build
-	docker run $(AWS_SECRET) -p 50051:50051 --rm $(IMAGE_NAME)
+	docker run $(EXTRA_FLAGS) -p 50051:50051 --rm $(IMAGE_NAME)
 
 .PHONY: build
 build:
@@ -17,7 +17,7 @@ push: build
 
 .PHONY: dev
 dev: build
-	docker run -it $(AWS_SECRET) --net=host --rm -v $(PWD):/usr/src/app $(IMAGE_NAME) /bin/bash
+	docker run -it $(EXTRA_FLAGS) --net=host --rm -v $(PWD):/usr/src/app $(IMAGE_NAME) /bin/bash
 
 .PHONY: compile
 compile:

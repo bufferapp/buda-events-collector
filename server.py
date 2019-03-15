@@ -34,8 +34,8 @@ def parse_raw_json(event, event_type):
 class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
     def __init__(self):
         self.bq_client = bigquery.Client(project="buffer-data")
-        self.bq_dataset = self.bq_client.dataset("buda_temp")
-        self.bq_table = self.bq_dataset.table("buda_events_test")
+        self.bq_dataset = self.bq_client.dataset("buda")
+        self.bq_table = self.bq_dataset.table("events")
         self.rows_buffer = []
 
         self.producers = {}
@@ -89,12 +89,13 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
                         skip_invalid_rows=True,
                         ignore_unknown_values=True,
                     )
+                    for row_errors in errors:
+                        for row_error in row_errors["errors"]:
+                            logger.warning(row_error["message"])
+
                 except Exception as e:
                     logger.warning(e)
 
-                for row_errors in errors:
-                    for row_error in row_errors["errors"]:
-                        logger.warning(row_error["message"])
                 self.rows_buffer = []
 
     def CollectFunnelEvent(self, funnel_event, context):

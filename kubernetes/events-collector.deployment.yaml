@@ -4,7 +4,7 @@ metadata:
     name: events-collector
     namespace: data
 spec:
-    minReadySeconds: 5
+    minReadySeconds: 10
     replicas: 3
     strategy:
         type: RollingUpdate
@@ -25,7 +25,7 @@ spec:
                       secretName: bigquery-key
             containers:
                 - name: events-collector
-                  image: bufferapp/events-collector:0.5.0
+                  image: bufferapp/events-collector:0.6.0
                   imagePullPolicy: Always
                   volumeMounts:
                       - name: bigquery-google-cloud-credentials

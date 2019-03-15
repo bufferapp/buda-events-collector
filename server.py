@@ -2,11 +2,14 @@
 
 from concurrent import futures
 import time
+import datetime
 import grpc
 import logging
 import os
+import json
 from kiner.producer import KinesisProducer
 from google.protobuf.json_format import MessageToDict
+from google.cloud import bigquery
 
 from buda.services.events_collector_service_pb2 import Response
 import buda.services.events_collector_service_pb2_grpc as collector_grpc
@@ -19,10 +22,23 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
+def parse_raw_json(event, event_type):
+    return {
+        "id": event.get("id", {}).get("id"),
+        "payload": json.dumps(event),
+        "created_at": datetime.datetime.now().timestamp(),
+        "type": event_type,
+    }
+
+
 class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
     def __init__(self):
-        self.producers = {}
+        self.bq_client = bigquery.Client(project="buffer-data")
+        self.bq_dataset = self.bq_client.dataset("buda")
+        self.bq_table = self.bq_dataset.table("events")
+        self.rows_buffer = []
 
+        self.producers = {}
         self.add_producer("funnel_events")
         self.add_producer("funnels")
         self.add_producer("subscription_created")
@@ -60,6 +76,27 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
             logger.info(data)
         else:
             self.producers[name].put_record(data)
+
+            # Sending data also to Big Query
+            r = parse_raw_json(message_json, name)
+            self.rows_buffer.append(r)
+
+            if len(self.rows_buffer) == 100:
+                try:
+                    errors = self.bq_client.insert_rows_json(
+                        self.bq_table,
+                        self.rows_buffer,
+                        skip_invalid_rows=True,
+                        ignore_unknown_values=True,
+                    )
+                    for row_errors in errors:
+                        for row_error in row_errors["errors"]:
+                            logger.warning(row_error["message"])
+
+                except Exception as e:
+                    logger.warning(e)
+
+                self.rows_buffer = []
 
     def CollectFunnelEvent(self, funnel_event, context):
         self.send("funnel_events", funnel_event)

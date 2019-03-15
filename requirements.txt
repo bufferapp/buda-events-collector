@@ -4,3 +4,4 @@ grpcio==1.19.0
 protobuf==3.7.0
 grpcio-health-checking==1.13.0
 grpcio-tools==1.19.0
+google-cloud-bigquery==1.10.0

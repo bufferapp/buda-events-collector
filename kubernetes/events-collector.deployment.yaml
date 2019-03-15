@@ -4,7 +4,7 @@ metadata:
     name: events-collector
     namespace: data
 spec:
-    minReadySeconds: 5
+    minReadySeconds: 10
     replicas: 3
     strategy:
         type: RollingUpdate
@@ -19,10 +19,17 @@ spec:
             labels:
                 app: events-collector
         spec:
+            volumes:
+                - name: bigquery-google-cloud-credentials
+                  secret:
+                      secretName: bigquery-key
             containers:
                 - name: events-collector
-                  image: bufferapp/events-collector:0.5.0
+                  image: bufferapp/events-collector:0.6.0
                   imagePullPolicy: Always
+                  volumeMounts:
+                      - name: bigquery-google-cloud-credentials
+                        mountPath: /var/secrets/google
                   readinessProbe:
                       periodSeconds: 5
                       exec:
@@ -51,6 +58,8 @@ spec:
                             secretKeyRef:
                                 name: aws
                                 key: default-region
+                      - name: GOOGLE_APPLICATION_CREDENTIALS
+                        value: /var/secrets/google/key.json
                   ports:
                       - name: grpc
                         containerPort: 50051

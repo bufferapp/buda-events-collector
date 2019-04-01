@@ -86,8 +86,8 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
                     errors = self.bq_client.insert_rows_json(
                         self.bq_table,
                         self.rows_buffer,
-                        skip_invalid_rows=True,
-                        ignore_unknown_values=True,
+                        skip_invalid_rows=False,
+                        ignore_unknown_values=False,
                     )
                     for row_errors in errors:
                         for row_error in row_errors["errors"]:

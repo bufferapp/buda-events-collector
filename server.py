@@ -36,7 +36,7 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.bq_client = bigquery.Client(project="buffer-data")
         self.bq_dataset = self.bq_client.dataset("buda")
         self.bq_table = self.bq_dataset.table("events")
-        self.rows_buffer = []
+        self.rows_buffer = {}
 
         self.producers = {}
         self.add_producer("funnel_events")
@@ -59,6 +59,8 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
         logger.info("Added producer {}".format(name))
 
+        self.rows_buffer[name] = []
+
         return producer
 
     def send(self, name, message):
@@ -79,24 +81,25 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
             # Sending data also to Big Query
             r = parse_raw_json(message_json, name)
-            self.rows_buffer.append(r)
+            self.rows_buffer[name].append(r)
 
-            if len(self.rows_buffer) == 100:
+            if len(self.rows_buffer[name]) == 100:
                 try:
                     errors = self.bq_client.insert_rows_json(
                         self.bq_table,
-                        self.rows_buffer,
+                        self.rows_buffer[name],
                         skip_invalid_rows=False,
                         ignore_unknown_values=False,
                     )
+
+                    errors = []
                     for row_errors in errors:
                         for row_error in row_errors["errors"]:
                             logger.warning(row_error["message"])
+                    self.rows_buffer[name] = []
 
                 except Exception as e:
-                    logger.warning(e)
-
-                self.rows_buffer = []
+                    logger.error(e)
 
     def CollectFunnelEvent(self, funnel_event, context):
         self.send("funnel_events", funnel_event)

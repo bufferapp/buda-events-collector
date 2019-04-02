@@ -91,8 +91,6 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
                         skip_invalid_rows=False,
                         ignore_unknown_values=False,
                     )
-
-                    errors = []
                     for row_errors in errors:
                         for row_error in row_errors["errors"]:
                             logger.warning(row_error["message"])

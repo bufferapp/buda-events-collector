@@ -83,7 +83,7 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
             r = parse_raw_json(message_json, name)
             self.rows_buffer[name].append(r)
 
-            if len(self.rows_buffer[name]) == 100:
+            if len(self.rows_buffer[name]) >= 100:
                 try:
                     errors = self.bq_client.insert_rows_json(
                         self.bq_table,
@@ -137,7 +137,7 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
 
 if __name__ == "__main__":
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
     logger.info("Server initialized")
 
     service = EventsCollectorServicer()

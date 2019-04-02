@@ -25,7 +25,7 @@ spec:
                       secretName: bigquery-key
             containers:
                 - name: events-collector
-                  image: bufferapp/events-collector:0.6.2
+                  image: bufferapp/events-collector:0.6.3
                   imagePullPolicy: Always
                   volumeMounts:
                       - name: bigquery-google-cloud-credentials

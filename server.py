@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from concurrent import futures
+from queue import Queue
 import time
 import datetime
 import grpc
@@ -36,7 +37,7 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.bq_client = bigquery.Client(project="buffer-data")
         self.bq_dataset = self.bq_client.dataset("buda")
         self.bq_table = self.bq_dataset.table("events")
-        self.rows_buffer = {}
+        self.rows_buffer = Queue()
 
         self.producers = {}
         self.add_producer("funnel_events")
@@ -59,8 +60,6 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
         logger.info("Added producer {}".format(name))
 
-        self.rows_buffer[name] = []
-
         return producer
 
     def send(self, name, message):
@@ -79,22 +78,27 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         else:
             self.producers[name].put_record(data)
 
-            # Sending data also to Big Query
+            # Sending data also to BigQuery
             r = parse_raw_json(message_json, name)
-            self.rows_buffer[name].append(r)
+            self.rows_buffer.put(r)
 
-            if len(self.rows_buffer[name]) >= 100:
+            if self.rows_buffer.qsize() >= 100:
                 try:
+                    # Flush queue into records array
+                    records = []
+                    while not self.rows_buffer.empty() and len(records) < 100:
+                        records.append(self.rows_buffer.get())
+
+                    # Send records to BigQuery
                     errors = self.bq_client.insert_rows_json(
                         self.bq_table,
-                        self.rows_buffer[name],
+                        records,
                         skip_invalid_rows=False,
                         ignore_unknown_values=False,
                     )
                     for row_errors in errors:
                         for row_error in row_errors["errors"]:
                             logger.warning(row_error["message"])
-                    self.rows_buffer[name] = []
 
                 except Exception as e:
                     logger.error(e)
@@ -137,7 +141,7 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
 
 
 if __name__ == "__main__":
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     logger.info("Server initialized")
 
     service = EventsCollectorServicer()

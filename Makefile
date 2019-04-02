@@ -1,4 +1,4 @@
-IMAGE_NAME:=bufferapp/events-collector:0.6.3
+IMAGE_NAME:=bufferapp/events-collector:0.6.4
 EXTRA_FLAGS = -v $(HOME)/.aws:/root/.aws -e ENV=dev -v ~/.config/gcloud/:/root/.config/gcloud
 
 .DEFAULT_GOAL := run

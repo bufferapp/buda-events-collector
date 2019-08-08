@@ -40,14 +40,6 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.rows_buffer = Queue()
 
         self.producers = {}
-        self.add_producer("funnel_events")
-        self.add_producer("funnels")
-        self.add_producer("subscription_created")
-        self.add_producer("subscription_period_updated")
-        self.add_producer("subscription_cancelled")
-        self.add_producer("visits")
-        self.add_producer("signups")
-        self.add_producer("signins")
         self.add_producer("actions_taken")
 
     def Check(self, request, context):
@@ -104,35 +96,35 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
                     logger.error(e)
 
     def CollectFunnelEvent(self, funnel_event, context):
-        self.send("funnel_events", funnel_event)
+        logger.info("Ignoring funnel_event...")
         return Response(message="OK")
 
     def CollectFunnel(self, funnel, context):
-        self.send("funnels", funnel)
+        logger.info("Ignoring funnel...")
         return Response(message="OK")
 
     def CollectSubscriptionCreated(self, subscription_created, context):
-        self.send("subscription_created", subscription_created)
+        logger.info("Ignoring subscription created...")
         return Response(message="OK")
 
     def CollectSubscriptionPeriodUpdated(self, subscription_period_updated, context):
-        self.send("subscription_period_updated", subscription_period_updated)
+        logger.info("Ignoring subscription period updated...")
         return Response(message="OK")
 
     def CollectSubscriptionCancelled(self, subscription_cancelled, context):
-        self.send("subscription_cancelled", subscription_cancelled)
+        logger.info("Ignoring subscription cancelled...")
         return Response(message="OK")
 
     def CollectVisit(self, visit, context):
-        self.send("visits", visit)
+        logger.info("Ignoring visit...")
         return Response(message="OK")
 
     def CollectSignup(self, signup, context):
-        self.send("signups", signup)
+        logger.info("Ignoring signup...")
         return Response(message="OK")
 
     def CollectSignin(self, signin, context):
-        self.send("signins", signin)
+        logger.info("Ignoring signing...")
         return Response(message="OK")
 
     def CollectActionTaken(self, action_taken, context):

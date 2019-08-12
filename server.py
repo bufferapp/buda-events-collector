@@ -68,7 +68,9 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         if os.getenv("ENV", "prod") == "dev":
             logger.info(data)
         else:
-            self.producers[name].put_record(data)
+            # Sending data to Kinesis
+            if self.producers.get(name):
+                self.producers[name].put_record(data)
 
             # Sending data also to BigQuery
             r = parse_raw_json(message_json, name)
@@ -96,35 +98,35 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
                     logger.error(e)
 
     def CollectFunnelEvent(self, funnel_event, context):
-        logger.info("Ignoring funnel_event...")
+        self.send("funnel_events", funnel_event)
         return Response(message="OK")
 
     def CollectFunnel(self, funnel, context):
-        logger.info("Ignoring funnel...")
+        self.send("funnels", funnel)
         return Response(message="OK")
 
     def CollectSubscriptionCreated(self, subscription_created, context):
-        logger.info("Ignoring subscription created...")
+        self.send("subscription_created", subscription_created)
         return Response(message="OK")
 
     def CollectSubscriptionPeriodUpdated(self, subscription_period_updated, context):
-        logger.info("Ignoring subscription period updated...")
+        self.send("subscription_period_updated", subscription_period_updated)
         return Response(message="OK")
 
     def CollectSubscriptionCancelled(self, subscription_cancelled, context):
-        logger.info("Ignoring subscription cancelled...")
+        self.send("subscription_cancelled", subscription_cancelled)
         return Response(message="OK")
 
     def CollectVisit(self, visit, context):
-        logger.info("Ignoring visit...")
+        self.send("visits", visit)
         return Response(message="OK")
 
     def CollectSignup(self, signup, context):
-        logger.info("Ignoring signup...")
+        self.send("signups", signup)
         return Response(message="OK")
 
     def CollectSignin(self, signin, context):
-        logger.info("Ignoring signing...")
+        self.send("signins", signin)
         return Response(message="OK")
 
     def CollectActionTaken(self, action_taken, context):

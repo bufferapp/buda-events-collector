@@ -40,14 +40,6 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         self.rows_buffer = Queue()
 
         self.producers = {}
-        self.add_producer("funnel_events")
-        self.add_producer("funnels")
-        self.add_producer("subscription_created")
-        self.add_producer("subscription_period_updated")
-        self.add_producer("subscription_cancelled")
-        self.add_producer("visits")
-        self.add_producer("signups")
-        self.add_producer("signins")
         self.add_producer("actions_taken")
 
     def Check(self, request, context):
@@ -76,7 +68,9 @@ class EventsCollectorServicer(collector_grpc.EventsCollectorServicer):
         if os.getenv("ENV", "prod") == "dev":
             logger.info(data)
         else:
-            self.producers[name].put_record(data)
+            # Sending data to Kinesis
+            if self.producers.get(name):
+                self.producers[name].put_record(data)
 
             # Sending data also to BigQuery
             r = parse_raw_json(message_json, name)
